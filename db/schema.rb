@@ -12,6 +12,22 @@
 
 ActiveRecord::Schema.define(version: 2020_04_14_205549) do
 
+  create_table "albums", force: :cascade do |t|
+    t.string "name"
+    t.integer "rating"
+    t.datetime "release_date"
+    t.integer "track_count"
+    t.string "genre"
+    t.integer "artist_id"
+  end
+
+  create_table "artists", force: :cascade do |t|
+    t.string "name"
+    t.integer "artist_id"
+    t.string "country"
+    t.integer "artist_rating"
+  end
+
   create_table "favorites", force: :cascade do |t|
     t.integer "user_id"
     t.integer "artist_id"

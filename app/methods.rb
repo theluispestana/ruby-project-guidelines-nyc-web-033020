@@ -13,15 +13,17 @@ end
 
 def search_for_artist
   puts "Please search for an artist" 
-  user_artist_search = gets.chomp.titleize
+  user_artist_search = gets.chomp.downcase
 end
 
-def artist_api_call
-  url = "https://api.musixmatch.com/ws/1.1/artist.search?q_artist=arctic%20monkeys&page_size=5&apikey=env[api_key]"
+def artist_api_call(user_input)
+  url = "https://api.musixmatch.com/ws/1.1/artist.search?q_artist=#{user_input}&page_size=5&apikey=#{ENV["api_key"]}"
   uri = URI(url)
   response = Net::HTTP.get(uri)
+  data = JSON.parse(response)
+  artist = data["message"]["body"]["artist_list"][0]["artist"]
   binding.pry
-  JSON.parse(response.body)
+  Artist.find_or_create_by(artist["artist_name"], artist["artist_id"], artist["artist_country"], artist["artist_rating"])
 end
 
 def command_hash
@@ -48,9 +50,11 @@ def check_user_input
   user_input = gets.chomp
 end
 
-def check_for_input
+def start_app
   user_input = ''
   until user_input == "quit" || user_input == "exit" do
+    user_input = search_for_artist
+    artist_api_call(user_input)
     display_commands
     puts "Please Enter a valid command" 
     user_input = "quit"

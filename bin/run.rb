@@ -2,8 +2,7 @@ require 'rest-client'
 require_relative '../config/environment'
 
 
-# welcome
+welcome
 # search_for_artist
-# check_for_input
+start_app
 
-puts artist_api_call
