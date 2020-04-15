@@ -2,10 +2,8 @@ def welcome
   puts "Please enter your name"
   username = gets.chomp
   puts "Welcome #{username}."
-  user = User.find_or_create_by(name: username)
-  user
+  user = User.find_or_create_by(name: username) user
 end
-
 
 def display_commands 
   puts ''
@@ -17,8 +15,6 @@ def display_commands
     n += 1
   end
 end
-
-
 
 def ask_for_artist_input
   puts "Please search for an artist" 
@@ -50,16 +46,6 @@ def find_or_create_favorite(user_id, artist)
 end
 
 def command_hash
-  # { 
-  #   add_artist: "Add artist to favorites",
-  #   show_my_favs: "Show my favorite artists",
-  #   show_ratings: "Show my ratings",
-  #   show_albums: "Show an artists albums",
-  #   delete_favs: "Delete all artists from my favorites",
-  #   delete_artist: "Delete artist from favorite",
-  #   change_rating: "Change artist Rating",
-  #   q: "quit"
-  # }
   {
     first_set_of_commands: {
       fav: "favorite",
