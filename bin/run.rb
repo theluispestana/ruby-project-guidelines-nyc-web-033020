@@ -2,7 +2,7 @@ require 'rest-client'
 require_relative '../config/environment'
 
 
-# welcome
-# search_for_artist
-start_app
+user = welcome
+artist = search_for_artist
+start_app(user, artist)
 
