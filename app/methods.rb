@@ -20,7 +20,7 @@ def search_for_artist
 end
 
 def artist_api_call(user_input)
-  artist = Artist.find_by(name: "#{user_input.downcase}")
+  artist = Artist.find_by(name: "#{user_input.titleize}")
   if artist
     artist
   else
