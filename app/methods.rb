@@ -17,13 +17,23 @@ def search_for_artist
 end
 
 def artist_api_call(user_input)
-  url = "https://api.musixmatch.com/ws/1.1/artist.search?q_artist=#{user_input}&page_size=5&apikey=#{ENV["api_key"]}"
-  uri = URI(url)
-  response = Net::HTTP.get(uri)
-  data = JSON.parse(response)
-  artist = data["message"]["body"]["artist_list"][0]["artist"]
-  binding.pry
-  Artist.find_or_create_by(artist["artist_name"], artist["artist_id"], artist["artist_country"], artist["artist_rating"])
+  artist = Artist.find_by(name: "#{user_input.titleize}")
+  if artist
+    artist
+  else
+    url = "https://api.musixmatch.com/ws/1.1/artist.search?q_artist=#{user_input}&page_size=5&apikey=#{ENV["api_key"]}"
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    data = JSON.parse(response)
+    artist = data["message"]["body"]["artist_list"][0]["artist"]
+    Artist.create(name: artist["artist_name"], artist_id: artist["artist_id"], artist_rating: artist["artist_rating"], country: artist["artist_country"])
+  end
+
+  #Artist.find_or_create_by(name: artist["artist_name"]) do |artist|
+    #artist.artist_id = 10 
+    #artist.artist_rating = artist["artist_rating"]
+    #artist.country = artist["artist_country"]
+  #end
 end
 
 def command_hash
