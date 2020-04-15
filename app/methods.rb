@@ -2,7 +2,8 @@ def welcome
   puts "Please enter your name"
   username = gets.chomp
   puts "Welcome #{username}."
-  User.find_or_create_by(name: username)
+  user = User.find_or_create_by(name: username)
+  user
 end
 
 def display_commands 
@@ -39,6 +40,15 @@ def artist_api_call(user_input)
   #end
 end
 
+def find_or_create_favorite(user_id, artist_id)
+  favorite = Favorite.where(["user_id = ? and artist_id = ?", user_id, artist_id])
+  if favorite.length > 0
+    favorite
+  else
+    Favorite.create(user_id: user_id, artist_id: artist_id)
+  end
+end
+
 def command_hash
   # { 
   #   add_artist: "Add artist to favorites",
@@ -64,25 +74,22 @@ def check_user_input
 end
 
 def start_app
+  user = welcome
   user_input = ''
   until user_input.downcase == "quit" || user_input.downcase == "exit" do
     user_input = search_for_artist
-    artist_api_call(user_input)
+    artist = artist_api_call(user_input)
     display_commands
-    compare_user_input
-    
-  end
-end
-
-def compare_user_input
-  user_input = gets.chomp
-  cmd = command_hash[:first_set_of_commands]
-  if user_input == cmd[:q]
-    return user_input = "quit"
-    binding.pry
-  elsif user_input == cmd[:fav]
-    puts "Favorite Artist"
-  else
-    puts "Info about artist"
+    user_input = gets.chomp
+    cmd = command_hash[:first_set_of_commands]
+    if user_input == cmd[:q]
+      user_input = "quit"
+      # binding.pry
+    elsif user_input == cmd[:fav]
+      find_or_create_favorite(user.id, artist.id)
+    else
+      puts "Artist Name: #{artist.name}, Artist's Country: #{artist.country}, Artist's Rating: #{artist.artist_rating}"
+    end
+      
   end
 end
