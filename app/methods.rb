@@ -6,10 +6,12 @@ def welcome
 end
 
 def display_commands 
+  puts "Please Enter a valid command"
   cmd = command_hash
-  cmd[0].each { |k, v| puts v }
-
+  cmd[:first_set_of_commands].each { |k, v| puts v }
 end
+
+
 
 def search_for_artist
   puts "Please search for an artist" 
@@ -17,7 +19,7 @@ def search_for_artist
 end
 
 def artist_api_call(user_input)
-  artist = Artist.find_by(name: "#{user_input.titleize}")
+  artist = Artist.find_by(name: "#{user_input.downcase}")
   if artist
     artist
   else
@@ -25,6 +27,7 @@ def artist_api_call(user_input)
     uri = URI(url)
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)
+    # binding.pry
     artist = data["message"]["body"]["artist_list"][0]["artist"]
     Artist.create(name: artist["artist_name"], artist_id: artist["artist_id"], artist_rating: artist["artist_rating"], country: artist["artist_country"])
   end
@@ -47,13 +50,13 @@ def command_hash
   #   change_rating: "Change artist Rating",
   #   q: "quit"
   # }
-  [
-    {
+  {
+    first_set_of_commands: {
       fav: "favorite",
       q: "quit",
       info: "information about artist"
     }
-  ]
+  }
 end
 
 def check_user_input
@@ -62,11 +65,24 @@ end
 
 def start_app
   user_input = ''
-  until user_input == "quit" || user_input == "exit" do
+  until user_input.downcase == "quit" || user_input.downcase == "exit" do
     user_input = search_for_artist
     artist_api_call(user_input)
     display_commands
-    puts "Please Enter a valid command" 
-    user_input = "quit"
+    compare_user_input
+    
+  end
+end
+
+def compare_user_input
+  user_input = gets.chomp
+  cmd = command_hash[:first_set_of_commands]
+  if user_input == cmd[:q]
+    return user_input = "quit"
+    binding.pry
+  elsif user_input == cmd[:fav]
+    puts "Favorite Artist"
+  else
+    puts "Info about artist"
   end
 end
