@@ -28,7 +28,7 @@ def artist_api_call(user_input)
     uri = URI(url)
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)
-    # binding.pry
+    return puts "That artist was not found" if data["message"]["header"]["available"]  == 0
     artist = data["message"]["body"]["artist_list"][0]["artist"]
     Artist.create(name: artist["artist_name"], artist_id: artist["artist_id"], artist_rating: artist["artist_rating"], country: artist["artist_country"])
   end
@@ -64,7 +64,8 @@ def command_hash
     first_set_of_commands: {
       fav: "favorite",
       q: "quit",
-      info: "information about artist"
+      info: "information about artist",
+      search: "search for another artist"
     }
   }
 end
@@ -76,9 +77,9 @@ end
 def start_app
   user = welcome
   user_input = ''
+  user_input = search_for_artist
+  artist = artist_api_call(user_input)
   until user_input.downcase == "quit" || user_input.downcase == "exit" do
-    user_input = search_for_artist
-    artist = artist_api_call(user_input)
     display_commands
     user_input = gets.chomp
     cmd = command_hash[:first_set_of_commands]
@@ -87,6 +88,8 @@ def start_app
       # binding.pry
     elsif user_input == cmd[:fav]
       find_or_create_favorite(user.id, artist.id)
+    elsif user_input == cmd[:search]
+      start_app
     else
       puts "Artist Name: #{artist.name}, Artist's Country: #{artist.country}, Artist's Rating: #{artist.artist_rating}"
     end
