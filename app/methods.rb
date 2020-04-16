@@ -26,6 +26,7 @@ def command_hash
     primary_commands: {
       fav: "favorite",
       info: "information about artist",
+      albums: "artist's top albums",
       my_favs: "show my favorites",
       search: "search for another artist",
       q: "quit"
@@ -33,6 +34,7 @@ def command_hash
     rating_commands: {
       rate: "Rate artist",
       all_rating: "Show all ratings for this artist",
+      my_ratings: "Show all of your ratings",
       q: "Don't rate"
     }
   }
@@ -48,7 +50,7 @@ def search_for_artist
   artist
 end
 
-def add_rating(favorite)
+def add_rating(favorite, artist, user)
   display_commands(:rating_commands)
   print "     > "
   input = gets.chomp
@@ -65,8 +67,10 @@ def add_rating(favorite)
       end
     end
   elsif input == cmd[:all_rating] || input == "2"
-    puts "show all ratings"
-  elsif input == cmd[:q] || input == "3"
+    artist.show_all_ratings_for_artist
+  elsif input == cmd[:my_ratings] || input == "3"
+    user.my_ratings
+  elsif input == cmd[:q] || input == "4"
     puts "go back to loop"
   else
     puts "That command was not recognized"
@@ -79,17 +83,19 @@ def start_app(user, artist)
     print "     > "
     user_input = gets.chomp
     cmd = command_hash[:primary_commands]
-    if user_input == cmd[:q] || user_input == "5"
+    if user_input == cmd[:q] || user_input == "6"
       break
     elsif user_input == cmd[:fav] || user_input == "1"
       favorite = Favorite.find_or_create(user.id, artist)
-      add_rating(favorite)
-    elsif user_input == cmd[:search] || user_input == "4"
+      add_rating(favorite, artist, user)
+    elsif user_input == cmd[:search] || user_input == "5"
       artist = search_for_artist
-    elsif user_input == cmd[:my_favs] || user_input == "3"
+    elsif user_input == cmd[:my_favs] || user_input == "4"
       user.show_my_favs
     elsif user_input == cmd[:info] || user_input == "2"
       puts "Artist Name: #{artist.name}, Artist's Country: #{artist.country}, Artist's Rating: #{artist.artist_rating}"
+    elsif user_input == cmd[:albums] || user_input == "3"
+      puts "top albums"
     else
       puts "That command was not recognized"
     end

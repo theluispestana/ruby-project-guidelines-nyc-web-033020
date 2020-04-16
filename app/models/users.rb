@@ -9,5 +9,11 @@ def show_my_favs
     else
       puts "  -- You have no favorites at this time"
     end
-  end
+end
+
+    def my_ratings
+        self.favorites.reload.each do |favorite|
+            puts "  -- #{favorite.artist_name}: #{favorite.user_rating}" if favorite.user_rating != nil
+        end
+    end
 end
