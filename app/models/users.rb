@@ -3,18 +3,12 @@ has_many :favorites
 has_many :artists, through: :favorites
 
 def show_my_favs
-    # if self.favorites.length == 0
-    #     puts "  -- You have no favorites at this time"
-    # else
-    #     self.favorites.each {|fav| puts "  -- #{fav.artist_name}"}
-    # end
-        arr_length = self.favorites.length
-        # puts arr_length
-        if self.favorites.length > 0
-            self.favorites.each {|fav| puts "  -- #{fav.artist_name}"}
+        current_favs = self.favorites.reload
+        if current_favs.length > 0
+            current_favs.each {|fav| puts "  -- #{fav.artist_name}"}
         else
             puts "  -- You have no favorites at this time"
         end
-        # puts arr_length
+
     end
 end

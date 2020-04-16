@@ -84,10 +84,7 @@ def start_app(user, artist)
     elsif user_input == cmd[:search] || user_input == "4"
       artist = search_for_artist
     elsif user_input == cmd[:my_favs] || user_input == "3"
-      # Favorite.all.each { |fav| puts "  -- #{fav.artist_name}" }
-      puts user.favorites.length
       user.show_my_favs
-      puts user.favorites.length
     elsif user_input == cmd[:info] || user_input == "2"
       puts "Artist Name: #{artist.name}, Artist's Country: #{artist.country}, Artist's Rating: #{artist.artist_rating}"
     else
