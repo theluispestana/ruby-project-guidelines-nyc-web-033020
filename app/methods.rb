@@ -2,7 +2,7 @@ def welcome
   puts "Please enter your name"
   username = gets.chomp
   puts "Welcome #{username}."
-  user = User.find_or_create_by(name: username) user
+  User.find_or_create_by(name: username) 
 end
 
 def display_commands 
@@ -72,7 +72,6 @@ def search_for_artist
 end
 
 def start_app(user, artist)
-  user_input = ''
   loop do
     display_commands
     print "     > "
