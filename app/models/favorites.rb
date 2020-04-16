@@ -1,6 +1,7 @@
 class Favorite < ActiveRecord::Base
 belongs_to :artist
 belongs_to :user
+attr_accessor :user_rating
 
     def self.find_or_create(user_id, artist)
         favorite = Favorite.where(["user_id = ? and artist_id = ?", user_id, artist.id])
