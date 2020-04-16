@@ -57,9 +57,8 @@ def add_rating(favorite)
     loop do
       puts "Please enter rating from 1-10"
       rating = gets.chomp.to_i
-      binding.pry
       if rating > 0 && rating < 11
-        favorite.user_rating = input
+        favorite.update(user_rating: rating)
         break
       else
         puts "That rating was invalid"
