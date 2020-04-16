@@ -1,6 +1,6 @@
 def welcome
   puts "Please enter your name"
-  username = gets.chomp
+  username = gets.strip.chomp
   puts "Welcome #{username}."
   User.find_or_create_by(name: username) 
 end
@@ -26,7 +26,7 @@ def command_hash
     primary_commands: {
       fav: "favorite",
       info: "information about artist",
-      albums: "artist's top albums",
+      albums: "artist's latest releases",
       my_favs: "show my favorites",
       search: "search for another artist",
       q: "quit"
@@ -95,7 +95,7 @@ def start_app(user, artist)
     elsif user_input == cmd[:info] || user_input == "2"
       puts "Artist Name: #{artist.name}, Artist's Country: #{artist.country}, Artist's Rating: #{artist.artist_rating}"
     elsif user_input == cmd[:albums] || user_input == "3"
-      puts "top albums"
+      artist.display_album_info
     else
       puts "That command was not recognized"
     end

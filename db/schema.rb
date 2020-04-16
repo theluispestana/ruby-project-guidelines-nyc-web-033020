@@ -10,14 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_15_203040) do
+ActiveRecord::Schema.define(version: 2020_04_16_201923) do
 
   create_table "albums", force: :cascade do |t|
     t.string "name"
     t.integer "rating"
-    t.datetime "release_date"
-    t.integer "track_count"
-    t.string "genre"
+    t.date "release_date"
     t.integer "artist_id"
   end
 

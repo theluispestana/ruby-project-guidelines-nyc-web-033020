@@ -17,6 +17,7 @@ class Artist < ActiveRecord::Base
       artist_inst = Artist.create(name: artist["artist_name"], artist_id: artist["artist_id"], artist_rating: artist["artist_rating"], country: artist["artist_country"])
       artist_inst.top_albums
     end
+    artist_inst
   end
 
   def top_albums
@@ -24,22 +25,34 @@ class Artist < ActiveRecord::Base
     uri = URI(url)
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)
-    # album_list = data["body"]["album_list"]
 
     i = 0
       3.times do
-        # binding.pry
         album = data["message"]["body"]["album_list"][i]["album"]
         Album.create(name: album["album_name"], rating: album["album_rating"], release_date: album["album_release_date"], artist_id: self.id)
         i += 1
       end
   end
 
+  def average_rating
+    favorites = self.favorites.select { |fav| fav.user_rating != nil }
+    ratings = favorites.map { |fav| fav.user_rating }
+    (ratings.reduce { |acc, cur| acc + cur } / ratings.length.to_f).round(1)
+  end
+  
   def show_all_ratings_for_artist
     self.favorites.reload.each do |favorite|
-      puts "  #{favorite.user_rating}" if favorite.user_rating != nil
+      puts "  #{favorite.user_rating}/10" if favorite.user_rating != nil
     end
+    puts "The average rating is #{average_rating}"
   end
 
+  def display_album_info
+    i = 1
+    self.albums.reload.each do |album| 
+      puts " #{i}. Name: #{album.name} | Rating: #{album.rating} | Release date: #{album.release_date}" 
+      i += 1
+    end
+  end
 end
 
