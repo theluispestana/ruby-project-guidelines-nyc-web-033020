@@ -71,7 +71,7 @@ def add_rating(favorite, artist, user)
   elsif input == cmd[:my_ratings] || input == "3"
     user.my_ratings
   elsif input == cmd[:q] || input == "4"
-    puts "go back to loop"
+    puts "Returning to main menu"
   else
     puts "That command was not recognized"
   end
