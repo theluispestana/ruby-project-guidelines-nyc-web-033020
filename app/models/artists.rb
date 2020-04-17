@@ -41,10 +41,19 @@ class Artist < ActiveRecord::Base
   end
   
   def show_all_ratings_for_artist
-    self.favorites.reload.each do |favorite|
-      puts "  #{favorite.user_rating}/10" if favorite.user_rating != nil
+    favorites = self.favorites.reload.select { |fav| fav.user_rating != nil }
+    ratings = favorites.map { |fav| fav.user_rating }
+    
+    if ratings.length > 0
+      ratings.each do |rating|
+        puts "  #{rating}/10"
+      end
+      puts "The average user rating is #{average_rating}"
+      puts "The rating from musixmatch is #{self.artist_rating}"
+    else
+      puts "There are no user ratings for this artist at this time"
+      puts "The rating from musixmatch is #{self.artist_rating}"
     end
-    puts "The average rating is #{average_rating}"
   end
 
   def display_album_info

@@ -12,8 +12,15 @@ def show_my_favs
 end
 
     def my_ratings
-        self.favorites.reload.each do |favorite|
-            puts "  -- #{favorite.artist_name}: #{favorite.user_rating}" if favorite.user_rating != nil
+        favorites = self.favorites.reload.select { |fav| fav.user_rating != nil }
+        ratings = favorites.map { |fav| fav.user_rating }
+        # binding.pry
+        if ratings.length > 0
+            favorites.each do |favorite|
+                puts "  -- #{favorite.artist_name}: #{favorite.user_rating}"
+            end
+        else
+            puts "You do not have any ratings at this time"
         end
     end
 end
